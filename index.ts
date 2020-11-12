@@ -3,6 +3,7 @@ import path from "path"
 import { torrentFilter } from "./middleware/helpers"
 import getPeers from "./middleware/getPeers"
 import multer from "multer"
+import { AnnounceResponse } from "./types/Torrent"
 const app = express()
 const dev = app.get("env") !== "production"
 const normalizePort = (port: string) => parseInt(port, 10)
@@ -12,9 +13,13 @@ const upload = multer({ dest: "./uploads" })
 
 app.post("/upload", upload.single("torrent"), async (req, res, next) => {
 	console.log(req.file)
-	const peerObject = getPeers(req.file.filename)
-	console.log("peer object", peerObject)
-	res.send("peerobject")
+	getPeers(req.file.filename, (announceResponse: AnnounceResponse) => {
+		console.log(
+			"this is the announce response",
+			JSON.stringify(announceResponse)
+		)
+		res.json(JSON.stringify(announceResponse))
+	})
 })
 
 app.listen(PORT, () => {

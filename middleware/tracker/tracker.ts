@@ -26,7 +26,10 @@ import respType from "./tracker_utils/respType"
 //the tracker which files we're interested in
 //4. Get the announce response and extract the peers list
 
-const getAnnounceRespsonse = (torrent: Torrent): null | AnnounceResponse => {
+const getAnnounceRespsonse = (
+	torrent: Torrent,
+	callback: (announceResp: any) => any
+): null | AnnounceResponse => {
 	//dgram is a module for udp.
 	//socket instance is a means for network communication.
 	//argument 'udp4' means we want to use 4-byte IPv4 address (this is the most commonly used)
@@ -39,18 +42,19 @@ const getAnnounceRespsonse = (torrent: Torrent): null | AnnounceResponse => {
 
 	socket.on("message", response => {
 		console.log(`response to connection request: ${response}`)
-		console.log(respType(response))
+		// console.log(respType(response))
 		//there will be two responses upon the request: a connect and an announce response. We need to distinguish between the two and process them separately.
 		if (respType(response) === "connect") {
 			const connResp: ConnectionResponse = parseConnResp(response)
-			console.log(connResp)
+			// console.log(connResp)
 			const announceReq = buildAnnounceReq(connResp.connectionId, torrent)
-			console.log(`announce request: ${announceReq}`)
+			// console.log(`announce request: ${announceReq}`)
 			udpSend(socket, announceReq, url)
 		} else if (respType(response) === "announce") {
-			console.log(`announce response ${response}`)
+			// console.log(`announce response ${response}`)
 			const announceResp: AnnounceResponse = parseAnnounceResp(response)
-			console.log(announceResp)
+			// console.log(announceResp)
+			callback(announceResp)
 			return announceResp
 		}
 		// 	callback(announceResp.peers)
