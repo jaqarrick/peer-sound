@@ -8,16 +8,14 @@ const dev = app.get("env") !== "production"
 const normalizePort = (port: string) => parseInt(port, 10)
 const PORT = normalizePort(process.env.PORT || "5000")
 
-const upload = multer({ dest: "/uploads" })
+const upload = multer({ dest: "./uploads" })
 
-app.post(
-	"/submit-form",
-	upload.single("upload"),
-	(req: any, res: any, next: any) => {
-		console.log(req.file)
-		console.log(req.body)
-	}
-)
+app.post("/upload", upload.single("torrent"), async (req, res, next) => {
+	console.log(req.file)
+	const peerObject = getPeers(req.file.filename)
+	console.log("peer object", peerObject)
+	res.send("peerobject")
+})
 
 app.listen(PORT, () => {
 	console.log(`the server is up and running on port ${PORT}`)
