@@ -19,6 +19,7 @@ app.post("/upload", upload.single("torrent"), async (req, res, next) => {
 			JSON.stringify(announceResponse)
 		)
 		res.json(JSON.stringify(announceResponse))
+		res.end()
 	})
 })
 

@@ -77,6 +77,7 @@ const udpSend = (
 ) => {
 	console.log("connection requested!")
 	const url = urlParse(rawUrl)
+	console.log(url, url.port, url.hostname)
 	socket.send(message, 0, message.length, url.port, url.hostname, callback)
 }
 
