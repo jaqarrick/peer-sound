@@ -30,7 +30,7 @@ export interface AnnounceResponse {
 	peers: PeersObject[]
 }
 
-interface PeersObject {
+export interface PeersObject {
 	ip: string
 	port: number
 }
