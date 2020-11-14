@@ -12,6 +12,7 @@ const PORT = normalizePort(process.env.PORT || "5000")
 const upload = multer({ dest: "./uploads" })
 
 app.post("/upload", upload.single("torrent"), async (req, res, next) => {
+	console.log("upload received")
 	console.log(req.file)
 	getPeers(req.file.filename, (announceResponse: AnnounceResponse) => {
 		console.log(
