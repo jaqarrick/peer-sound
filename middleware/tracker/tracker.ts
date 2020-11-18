@@ -2,8 +2,6 @@ import dgram from "dgram"
 import url from "url"
 const urlParse = url.parse
 import buffer from "buffer"
-const Buffer = buffer.Buffer
-import crypto from "crypto"
 
 import buildConnReq from "./tracker_utils/buildConnReq"
 import parseConnResp from "./tracker_utils/parseConnResp"
@@ -46,19 +44,13 @@ const getAnnounceRespsonse = (
 		//there will be two responses upon the request: a connect and an announce response. We need to distinguish between the two and process them separately.
 		if (respType(response) === "connect") {
 			const connResp: ConnectionResponse = parseConnResp(response)
-			// console.log(connResp)
 			const announceReq = buildAnnounceReq(connResp.connectionId, torrent)
-			// console.log(`announce request: ${announceReq}`)
 			udpSend(socket, announceReq, url)
 		} else if (respType(response) === "announce") {
-			// console.log(`announce response ${response}`)
 			const announceResp: AnnounceResponse = parseAnnounceResp(response)
-			// console.log(announceResp)
 			callback(announceResp)
 			return announceResp
 		}
-		// 	callback(announceResp.peers)
-		// }
 	})
 
 	return null
